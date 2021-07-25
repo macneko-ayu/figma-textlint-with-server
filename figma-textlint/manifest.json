@@ -1,0 +1,7 @@
+{
+  "name": "figma-textlint",
+  "id": "1000962880161744998",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}
