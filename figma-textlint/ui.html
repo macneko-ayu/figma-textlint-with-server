@@ -1,17 +1,22 @@
-<h2>Rectangle Creator</h2>
-<p>Count: <input id="count" value="5"></p>
-<button id="create">Create</button>
+<h2>Figma TextLint</h2>
+<p>Token: <input id="token" value=""></p>
+<button id="execute">Execute</button>
 <button id="cancel">Cancel</button>
 <script>
 
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-rectangles', count } }, '*')
-}
+  document.getElementById('execute').onclick = () => {
+    const request = new XMLHttpRequest();
+    request.open('POST', 'http://localhost:3000/v1/textlint');
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.responseType = 'json';
+    request.onload = () => {
+      console.log(request.response);
+    };
+    request.send('text=綺麗綺麗');
+  }
 
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({pluginMessage: { type: 'cancel' }}, '*');
+  }
 
 </script>
