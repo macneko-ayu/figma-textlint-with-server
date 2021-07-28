@@ -18,6 +18,18 @@
   });
 
   document.getElementById('execute').onclick = () => {
+    parent.postMessage({pluginMessage: {type: 'execute'}}, '*');
+  }
+
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({pluginMessage: {type: 'complete'}}, '*');
+  }
+
+  onmessage = (event) => {
+    if (event.data.pluginMessage.type !== 'send-text') return;
+
+    const text = event.data.pluginMessage.data;
+
     const request = new XMLHttpRequest();
     request.open('POST', 'http://localhost:3000/v1/textlint');
     request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -25,11 +37,6 @@
     request.onload = () => {
       console.log(request.response);
     };
-    request.send('text=綺麗綺麗');
+    request.send(`text=${text}`);
   }
-
-  document.getElementById('cancel').onclick = () => {
-    parent.postMessage({pluginMessage: {type: 'cancel'}}, '*');
-  }
-
 </script>
