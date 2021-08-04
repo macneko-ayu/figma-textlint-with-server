@@ -25,31 +25,40 @@
     parent.postMessage({pluginMessage: {type: 'complete'}}, '*');
   }
 
-  onmessage = (event) => {
+  onmessage = async (event) => {
     if (event.data.pluginMessage.type !== 'send-text') return;
 
     const fileKey = event.data.pluginMessage.fileKey;
     const nodeId = event.data.pluginMessage.nodeId;
     const characters = event.data.pluginMessage.characters;
 
-    const request = new XMLHttpRequest();
-    request.open('POST', 'http://localhost:3000/v1/textlint');
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    request.responseType = 'json';
-    request.onload = () => {
-      if (request.status !== 200) {
-        alert(`Error ${request.status}: ${request.statusText}`);
-      } else {
-        const messages = request.response.messages;
-        messages.forEach(message => {
-          postComment(fileKey, nodeId, message);
-        });
-      }
-    };
-    request.onerror = () => {
-      alert("Network error")
-    };
-    request.send(`text=${characters}`);
+    const messages = await getTextlintMessages(fileKey, nodeId, characters)
+      .catch((e) => {
+        alert(e);
+      });
+    messages.forEach(message => {
+      postComment(fileKey, nodeId, message);
+    });
+  }
+
+  async function getTextlintMessages(fileKey, nodeId, characters) {
+    return new Promise((resolve, reject) => {
+      const request = new XMLHttpRequest();
+      request.open('POST', 'http://localhost:3000/v1/textlint');
+      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      request.responseType = 'json';
+      request.onload = () => {
+        if (request.status !== 200) {
+          reject(new Error(`${request.status}: ${request.statusText}`));
+        } else {
+          resolve(request.response.messages);
+        }
+      };
+      request.onerror = () => {
+        reject(new Error('Network error'));
+      };
+      request.send(`text=${characters}`);
+    });
   }
 
   function postComment(fileKey, nodeId, comment) {
