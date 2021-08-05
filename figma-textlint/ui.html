@@ -28,17 +28,20 @@
   onmessage = async (event) => {
     if (event.data.pluginMessage.type !== 'send-text') return;
 
-    const fileKey = event.data.pluginMessage.fileKey;
-    const nodeId = event.data.pluginMessage.nodeId;
-    const characters = event.data.pluginMessage.characters;
+    const textInfos = event.data.pluginMessage.textInfos;
+    await Promise.all(textInfos.map(async textInfo => {
+      const fileKey = textInfo.fileKey;
+      const nodeId = textInfo.nodeId;
+      const characters = textInfo.characters;
 
-    const messages = await getTextlintMessages(fileKey, nodeId, characters)
-      .catch((e) => {
-        alert(e);
+      const messages = await getTextlintMessages(fileKey, nodeId, characters)
+        .catch((e) => {
+          alert(e);
+        });
+      messages.forEach(message => {
+        postComment(fileKey, nodeId, message);
       });
-    messages.forEach(message => {
-      postComment(fileKey, nodeId, message);
-    });
+    }));
   }
 
   async function getTextlintMessages(fileKey, nodeId, characters) {
