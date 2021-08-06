@@ -41,12 +41,15 @@
       const messages = await getTextlintMessages(fileKey, nodeId, characters)
         .catch((e) => {
           alert(e);
-
         });
-      messages.forEach(message => {
-        postComment(fileKey, nodeId, message);
-      });
+      if (messages !== undefined) {
+        messages.forEach(message => {
+          postComment(fileKey, nodeId, message);
+        });
+      }
     }));
+    alert('Done.');
+    sendCloseMessage();
   }
 
   async function getTextlintMessages(fileKey, nodeId, characters) {
