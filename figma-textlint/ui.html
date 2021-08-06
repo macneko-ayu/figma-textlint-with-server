@@ -22,6 +22,10 @@
   }
 
   document.getElementById('cancel').onclick = () => {
+    sendCloseMessage();
+  }
+
+  function sendCloseMessage() {
     parent.postMessage({pluginMessage: {type: 'close'}}, '*');
   }
 
