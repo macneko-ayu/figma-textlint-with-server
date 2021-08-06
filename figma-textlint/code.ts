@@ -13,7 +13,7 @@ figma.ui.onmessage = msg => {
     figma.ui.postMessage({ type: 'send-text', textInfos })
   }
 
-  if (msg.type === 'complete') {
+  if (msg.type === 'close') {
     figma.closePlugin();
   }
 };

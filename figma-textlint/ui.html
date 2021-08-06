@@ -22,7 +22,7 @@
   }
 
   document.getElementById('cancel').onclick = () => {
-    parent.postMessage({pluginMessage: {type: 'complete'}}, '*');
+    parent.postMessage({pluginMessage: {type: 'close'}}, '*');
   }
 
   onmessage = async (event) => {
@@ -37,6 +37,7 @@
       const messages = await getTextlintMessages(fileKey, nodeId, characters)
         .catch((e) => {
           alert(e);
+
         });
       messages.forEach(message => {
         postComment(fileKey, nodeId, message);
