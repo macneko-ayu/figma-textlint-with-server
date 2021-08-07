@@ -63,13 +63,13 @@
       request.responseType = 'json';
       request.onload = () => {
         if (request.status !== 200) {
-          reject(new Error(`${request.status}: ${request.statusText}`));
+          reject(new Error(`Error: Textlint post request is ${request.status}. ${request.statusText}`));
         } else {
           resolve(request.response.messages);
         }
       };
       request.onerror = () => {
-        reject(new Error('Network error'));
+        reject(new Error('Error: Textlint post request is network error'));
       };
       request.send(`text=${characters}`);
     });
@@ -93,13 +93,16 @@
       request.setRequestHeader('X-FIGMA-TOKEN', token);
       request.setRequestHeader('Content-Type', 'application/json');
       request.onload = () => {
+        if (request.status === 428) {
+          reject(new Error(`Error: Figma api is rate limit. ${request.statusText}`));
+        }
         if (request.status !== 200) {
-          reject(`Error ${request.status}: ${request.statusText}`);
+          reject(new Error(`Error: Comment post request is ${request.status}. ${request.statusText}`));
         }
         resolve();
       }
       request.onerror = () => {
-        reject("Network error")
+        reject(new Error('Error: Comment post request is network error'));
       };
       request.send(JSON.stringify(data));
     });
