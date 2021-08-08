@@ -1,0 +1,16 @@
+{
+  "name": "figma-textlint",
+  "version": "1.0.0",
+  "description": "",
+  "main": "code.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc -p tsconfig.json"
+  },
+  "author": "macneko-ayu",
+  "license": "MIT",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.26.0",
+    "typescript": "^4.3.5"
+  }
+}
